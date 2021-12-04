@@ -1,4 +1,5 @@
 const Board = require('./board.model');
+const taskCleaner = require('./utils/task.cleaner');
 
 const boards = new Map();
 
@@ -34,6 +35,7 @@ const updateBoard = (id, data) => {
 const deleteBoard = (id) => {
   if (boards.has(id)) {
     boards.delete(id);
+    taskCleaner(id);
 
     return true;
   }

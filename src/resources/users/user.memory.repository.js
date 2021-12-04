@@ -1,4 +1,5 @@
 const User = require('./user.model');
+const userCleaner = require('./utils/user.cleaner');
 
 const users = new Map();
 
@@ -35,6 +36,7 @@ const updateUser = (id, data) => {
 const deleteUser = (id) => {
   if (users.has(id)) {
     users.delete(id);
+    userCleaner(id);
 
     return true;
   }

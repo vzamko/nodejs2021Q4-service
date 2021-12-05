@@ -1,6 +1,7 @@
 const Router = require('@koa/router');
 const boardsService = require('./board.service');
 const {uuidValidator, entityExistValidator} = require('../../common/utils/common.validator');
+const {boardCreateValidator, boardUpdateValidator} = require('./utils/board.validator');
 
 const router = new Router({
   prefix: '/boards'
@@ -28,6 +29,11 @@ router.get('/:id', ctx => {
 
 router.post('/', ctx => {
   let board = ctx.request.body;
+
+  if (boardCreateValidator(board, ctx)) {
+    return;
+  }
+
   board = boardsService.createBoard(board);
 
   ctx.response.status = 201;
@@ -42,6 +48,10 @@ router.put('/:id', ctx => {
   }
 
   if (entityExistValidator(id, 'board', ctx)) {
+    return;
+  }
+
+  if (boardUpdateValidator(ctx.request.body, ctx)) {
     return;
   }
 

@@ -14,7 +14,7 @@ const boardCreateValidator = (data, ctx) => {
   }
 
   data.columns.forEach(column => {
-    if (!column.title || !column.order) {
+    if (!column.title) {
       ctx.response.status = 400;
       ctx.body = "Some fields of column are missing.";
 
@@ -50,7 +50,7 @@ const boardUpdateValidator = (data, ctx) => {
   }
 
   data.columns.forEach(column => {
-    if (!column.title || !column.order) {
+    if (!column.title) {
       ctx.response.status = 400;
       ctx.body = "Some fields of column are missing.";
 

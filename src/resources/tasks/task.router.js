@@ -1,6 +1,7 @@
 const Router = require('@koa/router');
 const tasksService = require('./task.service');
 const {uuidValidator, entityExistValidator} = require('../../common/utils/common.validator');
+const {taskCreateValidator, taskUpdateValidator} = require('./utlis/task.validator');
 
 const router = new Router({
   prefix: '/boards/:boardId/tasks'
@@ -49,6 +50,11 @@ router.post('/', ctx => {
 
   let task = ctx.request.body;
   task.boardId = boardId;
+
+  if (taskCreateValidator(task, ctx)) {
+    return;
+  }
+
   task = tasksService.createTask(task);
 
   ctx.response.status = 201;
@@ -67,6 +73,11 @@ router.put('/:id', ctx => {
   }
 
   ctx.request.body.boardId = boardId;
+
+  if (taskUpdateValidator(ctx.request.body.boardId, ctx)) {
+    return;
+  }
+
   const task = tasksService.updateTask(id, ctx.request.body);
 
   ctx.response.status = 200;

@@ -56,4 +56,21 @@ const entityExistValidator = (id, entityType, ctx) => {
   }
 }
 
-module.exports = {uuidValidator, entityExistValidator}
+const columnExistValidator = (boardId, columnId, ctx) => {
+  if (!boardsService.getBoardById(boardId)) {
+    ctx.response.status = 404;
+    ctx.body = _setMessage('board', boardId);
+
+    return true;
+  }
+
+  if (boardsService.getBoardById(boardId)) {
+    const board = boardsService.getBoardById(boardId);
+
+    board.columns.forEach(column => column.id !== columnId);
+  }
+
+  return true;
+}
+
+module.exports = {uuidValidator, entityExistValidator, columnExistValidator}

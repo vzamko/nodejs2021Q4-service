@@ -1,24 +1,30 @@
 const Router = require('@koa/router');
 const boardsService = require('./board.service');
-const {uuidValidator, entityExistValidator} = require('../../common/utils/common.validator');
-const {boardCreateValidator, boardUpdateValidator} = require('./utils/board.validator');
+const {
+  uuidValidator,
+  entityExistValidator,
+} = require('../../common/utils/common.validator');
+const {
+  boardCreateValidator,
+  boardUpdateValidator,
+} = require('./utils/board.validator');
 const serverError = require('../../common/utils/serverError');
 
 const router = new Router({
-  prefix: '/boards'
+  prefix: '/boards',
 });
 
-router.get('/', ctx => {
+router.get('/', (ctx) => {
   try {
     const boards = boardsService.getAll();
-    ctx.body = boards.map(board => (board.toResponse()));
+    ctx.body = boards.map((board) => board.toResponse());
   } catch (e) {
     serverError(ctx);
   }
 });
 
-router.get('/:id', ctx => {
-  const {id} = ctx.params;
+router.get('/:id', (ctx) => {
+  const { id } = ctx.params;
 
   if (uuidValidator(id, ctx)) {
     return;
@@ -35,7 +41,7 @@ router.get('/:id', ctx => {
   }
 });
 
-router.post('/', ctx => {
+router.post('/', (ctx) => {
   let board = ctx.request.body;
 
   if (boardCreateValidator(board, ctx)) {
@@ -51,8 +57,8 @@ router.post('/', ctx => {
   }
 });
 
-router.put('/:id', ctx => {
-  const {id} = ctx.params;
+router.put('/:id', (ctx) => {
+  const { id } = ctx.params;
 
   if (uuidValidator(id, ctx)) {
     return;
@@ -75,8 +81,8 @@ router.put('/:id', ctx => {
   }
 });
 
-router.delete('/:id', ctx => {
-  const {id} = ctx.params;
+router.delete('/:id', (ctx) => {
+  const { id } = ctx.params;
 
   if (uuidValidator(id, ctx)) {
     return;

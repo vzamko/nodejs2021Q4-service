@@ -14,7 +14,11 @@ const getUserById = (id) => {
 };
 
 const createUser = (data) => {
-  const user = new User({name: data.name, login: data.login, password: data.password});
+  const user = new User({
+    name: data.name,
+    login: data.login,
+    password: data.password,
+  });
 
   users.set(user.id, user);
 
@@ -27,7 +31,7 @@ const updateUser = (id, data) => {
   if (users.has(id)) {
     user = users.get(id);
 
-    user.setProperty({...data});
+    user.setProperty({ ...data });
   }
 
   return user;

@@ -14,7 +14,7 @@ const getBoardById = (id) => {
 };
 
 const createBoard = (data) => {
-  const board = new Board({title: data.title, columns: data.columns});
+  const board = new Board({ title: data.title, columns: data.columns });
   boards.set(board.id, board);
 
   return board;
@@ -26,7 +26,7 @@ const updateBoard = (id, data) => {
   if (boards.has(id)) {
     board = boards.get(id);
 
-    board.setProperty({...data});
+    board.setProperty({ ...data });
   }
 
   return board;
@@ -43,4 +43,10 @@ const deleteBoard = (id) => {
   return false;
 };
 
-module.exports = { getAll, getBoardById, createBoard, updateBoard, deleteBoard };
+module.exports = {
+  getAll,
+  getBoardById,
+  createBoard,
+  updateBoard,
+  deleteBoard,
+};

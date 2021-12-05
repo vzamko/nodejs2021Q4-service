@@ -19,7 +19,7 @@ const createTask = (data) => {
     description: data.description,
     userId: data.userId,
     boardId: data.boardId,
-    columnId: data.columnId
+    columnId: data.columnId,
   });
   tasks.set(task.id, task);
 
@@ -32,7 +32,7 @@ const updateTask = (id, data) => {
   if (tasks.has(id)) {
     task = tasks.get(id);
 
-    task.setProperty({...data});
+    task.setProperty({ ...data });
   }
 
   return task;

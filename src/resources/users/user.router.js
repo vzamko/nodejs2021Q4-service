@@ -1,21 +1,27 @@
 const Router = require('@koa/router');
 const usersService = require('./user.service');
-const {uuidValidator, entityExistValidator} = require('../../common/utils/common.validator');
-const {userCreateValidator, userUpdateValidator} = require('./utils/user.validator');
+const {
+  uuidValidator,
+  entityExistValidator,
+} = require('../../common/utils/common.validator');
+const {
+  userCreateValidator,
+  userUpdateValidator,
+} = require('./utils/user.validator');
 const serverError = require('../../common/utils/serverError');
 
 const router = new Router({
-  prefix: '/users'
+  prefix: '/users',
 });
 
-router.get('/', ctx => {
+router.get('/', (ctx) => {
   const users = usersService.getAll();
 
-  ctx.body = users.map(user => (user.toResponse()));
+  ctx.body = users.map((user) => user.toResponse());
 });
 
-router.get('/:id', ctx => {
-  const {id} = ctx.params;
+router.get('/:id', (ctx) => {
+  const { id } = ctx.params;
 
   if (uuidValidator(id, ctx)) {
     return;
@@ -32,7 +38,7 @@ router.get('/:id', ctx => {
   }
 });
 
-router.post('/', ctx => {
+router.post('/', (ctx) => {
   let user = ctx.request.body;
 
   if (userCreateValidator(user, ctx)) {
@@ -48,8 +54,8 @@ router.post('/', ctx => {
   }
 });
 
-router.put('/:id', ctx => {
-  const {id} = ctx.params;
+router.put('/:id', (ctx) => {
+  const { id } = ctx.params;
 
   if (uuidValidator(id, ctx)) {
     return;
@@ -72,8 +78,8 @@ router.put('/:id', ctx => {
   }
 });
 
-router.delete('/:id', ctx => {
-  const {id} = ctx.params;
+router.delete('/:id', (ctx) => {
+  const { id } = ctx.params;
 
   if (uuidValidator(id, ctx)) {
     return;

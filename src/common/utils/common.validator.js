@@ -1,20 +1,21 @@
-const { validate } = require("uuid");
+const { validate } = require('uuid');
 const usersService = require('../../resources/users/user.service');
 const boardsService = require('../../resources/boards/board.service');
 const tasksService = require('../../resources/tasks/task.service');
 
-const _setMessage = (entityType, id) => `${entityType  } with ID ${  id  } does not exist.`
+const _setMessage = (entityType, id) =>
+  `${entityType} with ID ${id} does not exist.`;
 
 const uuidValidator = (uuid, ctx) => {
   if (uuid && !validate(uuid)) {
     ctx.response.status = 400;
-    ctx.body = "UUID is not valid";
+    ctx.body = 'UUID is not valid';
 
     return true;
   }
 
   return false;
-}
+};
 
 const entityExistValidator = (id, entityType, ctx) => {
   switch (entityType) {
@@ -50,11 +51,11 @@ const entityExistValidator = (id, entityType, ctx) => {
 
     default:
       ctx.response.status = 500;
-      ctx.body = "Server internal error";
+      ctx.body = 'Server internal error';
 
       return true;
   }
-}
+};
 
 const columnExistValidator = (boardId, columnId, ctx) => {
   if (!boardsService.getBoardById(boardId)) {
@@ -67,10 +68,10 @@ const columnExistValidator = (boardId, columnId, ctx) => {
   if (boardsService.getBoardById(boardId)) {
     const board = boardsService.getBoardById(boardId);
 
-    board.columns.forEach(column => column.id !== columnId);
+    board.columns.forEach((column) => column.id !== columnId);
   }
 
   return true;
-}
+};
 
-module.exports = {uuidValidator, entityExistValidator, columnExistValidator}
+module.exports = { uuidValidator, entityExistValidator, columnExistValidator };

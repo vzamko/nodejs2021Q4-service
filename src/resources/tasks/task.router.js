@@ -1,15 +1,21 @@
 const Router = require('@koa/router');
 const tasksService = require('./task.service');
-const {uuidValidator, entityExistValidator} = require('../../common/utils/common.validator');
-const {taskCreateValidator, taskUpdateValidator} = require('./utlis/task.validator');
+const {
+  uuidValidator,
+  entityExistValidator,
+} = require('../../common/utils/common.validator');
+const {
+  taskCreateValidator,
+  taskUpdateValidator,
+} = require('./utlis/task.validator');
 const serverError = require('../../common/utils/serverError');
 
 const router = new Router({
-  prefix: '/boards/:boardId/tasks'
+  prefix: '/boards/:boardId/tasks',
 });
 
-router.get('/', ctx => {
-  const {boardId} = ctx.params;
+router.get('/', (ctx) => {
+  const { boardId } = ctx.params;
 
   if (uuidValidator(boardId, ctx)) {
     return;
@@ -21,20 +27,23 @@ router.get('/', ctx => {
 
   try {
     const tasks = tasksService.getAll();
-    ctx.body = tasks.map(task => (task.toResponse()));
+    ctx.body = tasks.map((task) => task.toResponse());
   } catch (e) {
     serverError(ctx);
   }
 });
 
-router.get('/:id', ctx => {
-  const {boardId, id} = ctx.params;
+router.get('/:id', (ctx) => {
+  const { boardId, id } = ctx.params;
 
   if (uuidValidator(boardId, ctx) || uuidValidator(id, ctx)) {
     return;
   }
 
-  if (entityExistValidator(boardId, 'board', ctx) || entityExistValidator(id, 'task', ctx)) {
+  if (
+    entityExistValidator(boardId, 'board', ctx) ||
+    entityExistValidator(id, 'task', ctx)
+  ) {
     return;
   }
 
@@ -45,8 +54,8 @@ router.get('/:id', ctx => {
   }
 });
 
-router.post('/', ctx => {
-  const {boardId} = ctx.params;
+router.post('/', (ctx) => {
+  const { boardId } = ctx.params;
 
   if (uuidValidator(boardId, ctx)) {
     return;
@@ -72,14 +81,17 @@ router.post('/', ctx => {
   }
 });
 
-router.put('/:id', ctx => {
-  const {boardId, id} = ctx.params;
+router.put('/:id', (ctx) => {
+  const { boardId, id } = ctx.params;
 
   if (uuidValidator(boardId, ctx) || uuidValidator(id, ctx)) {
     return;
   }
 
-  if (entityExistValidator(boardId, 'board', ctx) || entityExistValidator(id, 'task', ctx)) {
+  if (
+    entityExistValidator(boardId, 'board', ctx) ||
+    entityExistValidator(id, 'task', ctx)
+  ) {
     return;
   }
 
@@ -98,14 +110,17 @@ router.put('/:id', ctx => {
   }
 });
 
-router.delete('/:id', ctx => {
-  const {boardId, id} = ctx.params;
+router.delete('/:id', (ctx) => {
+  const { boardId, id } = ctx.params;
 
   if (uuidValidator(boardId, ctx) || uuidValidator(id, ctx)) {
     return;
   }
 
-  if (entityExistValidator(boardId, 'board', ctx) || entityExistValidator(id, 'task', ctx)) {
+  if (
+    entityExistValidator(boardId, 'board', ctx) ||
+    entityExistValidator(id, 'task', ctx)
+  ) {
     return;
   }
 

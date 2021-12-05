@@ -1,29 +1,32 @@
 const boardCreateValidator = (data, ctx) => {
   if (!data.title || !data.columns) {
     ctx.response.status = 400;
-    ctx.body = "Some fields are missing.";
+    ctx.body = 'Some fields are missing.';
 
     return true;
   }
 
-  if (typeof data.title !== "string" || (!Array.isArray(data.columns) && data.columns.length === 0)) {
+  if (
+    typeof data.title !== 'string' ||
+    (!Array.isArray(data.columns) && data.columns.length === 0)
+  ) {
     ctx.response.status = 400;
-    ctx.body = "Some of fields must wrong type or empty.";
+    ctx.body = 'Some of fields must wrong type or empty.';
 
     return true;
   }
 
-  data.columns.forEach(column => {
+  data.columns.forEach((column) => {
     if (!column.title) {
       ctx.response.status = 400;
-      ctx.body = "Some fields of column are missing.";
+      ctx.body = 'Some fields of column are missing.';
 
       return true;
     }
 
-    if (typeof column.title !== "string" || typeof column.order !== "number") {
+    if (typeof column.title !== 'string' || typeof column.order !== 'number') {
       ctx.response.status = 400;
-      ctx.body = "Some of fields must wrong type.";
+      ctx.body = 'Some of fields must wrong type.';
 
       return true;
     }
@@ -32,34 +35,38 @@ const boardCreateValidator = (data, ctx) => {
   });
 
   return false;
-}
+};
 
 const boardUpdateValidator = (data, ctx) => {
-  if (data.title && typeof data.title !== "string") {
+  if (data.title && typeof data.title !== 'string') {
     ctx.response.status = 400;
-    ctx.body = "Title must be string";
+    ctx.body = 'Title must be string';
 
     return true;
   }
 
-  if (data.columns && !Array.isArray(data.columns) && data.columns.length === 0) {
+  if (
+    data.columns &&
+    !Array.isArray(data.columns) &&
+    data.columns.length === 0
+  ) {
     ctx.response.status = 400;
-    ctx.body = "Column must be array";
+    ctx.body = 'Column must be array';
 
     return true;
   }
 
-  data.columns.forEach(column => {
+  data.columns.forEach((column) => {
     if (!column.title) {
       ctx.response.status = 400;
-      ctx.body = "Some fields of column are missing.";
+      ctx.body = 'Some fields of column are missing.';
 
       return true;
     }
 
-    if (typeof column.title !== "string" || typeof column.order !== "number") {
+    if (typeof column.title !== 'string' || typeof column.order !== 'number') {
       ctx.response.status = 400;
-      ctx.body = "Some of fields must wrong type.";
+      ctx.body = 'Some of fields must wrong type.';
 
       return true;
     }
@@ -68,6 +75,6 @@ const boardUpdateValidator = (data, ctx) => {
   });
 
   return false;
-}
+};
 
-module.exports = {boardCreateValidator, boardUpdateValidator};
+module.exports = { boardCreateValidator, boardUpdateValidator };

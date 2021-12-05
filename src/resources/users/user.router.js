@@ -2,6 +2,7 @@ const Router = require('@koa/router');
 const usersService = require('./user.service');
 const {uuidValidator, entityExistValidator} = require('../../common/utils/common.validator');
 const {userCreateValidator, userUpdateValidator} = require('./utils/user.validator');
+const serverError = require('../../common/utils/serverError');
 
 const router = new Router({
   prefix: '/users'
@@ -24,7 +25,11 @@ router.get('/:id', ctx => {
     return;
   }
 
-  ctx.body = usersService.getUserById(id).toResponse();
+  try {
+    ctx.body = usersService.getUserById(id).toResponse();
+  } catch (e) {
+    serverError(ctx);
+  }
 });
 
 router.post('/', ctx => {
@@ -34,9 +39,13 @@ router.post('/', ctx => {
     return;
   }
 
-  user = usersService.createUser(user);
-  ctx.response.status = 201;
-  ctx.body = user.toResponse();
+  try {
+    user = usersService.createUser(user);
+    ctx.response.status = 201;
+    ctx.body = user.toResponse();
+  } catch (e) {
+    serverError(ctx);
+  }
 });
 
 router.put('/:id', ctx => {
@@ -54,10 +63,13 @@ router.put('/:id', ctx => {
     return;
   }
 
-  const user = usersService.updateUser(id, ctx.request.body);
-
-  ctx.response.status = 200;
-  ctx.body = user.toResponse();
+  try {
+    const user = usersService.updateUser(id, ctx.request.body);
+    ctx.response.status = 200;
+    ctx.body = user.toResponse();
+  } catch (e) {
+    serverError(ctx);
+  }
 });
 
 router.delete('/:id', ctx => {
@@ -71,9 +83,12 @@ router.delete('/:id', ctx => {
     return;
   }
 
-  usersService.deleteUser(id);
-
-  ctx.response.status = 204;
+  try {
+    usersService.deleteUser(id);
+    ctx.response.status = 204;
+  } catch (e) {
+    serverError(ctx);
+  }
 });
 
 module.exports = router;

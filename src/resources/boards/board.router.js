@@ -2,15 +2,19 @@ const Router = require('@koa/router');
 const boardsService = require('./board.service');
 const {uuidValidator, entityExistValidator} = require('../../common/utils/common.validator');
 const {boardCreateValidator, boardUpdateValidator} = require('./utils/board.validator');
+const serverError = require('../../common/utils/serverError');
 
 const router = new Router({
   prefix: '/boards'
 });
 
 router.get('/', ctx => {
-  const boards = boardsService.getAll();
-
-  ctx.body = boards.map(board => (board.toResponse()));
+  try {
+    const boards = boardsService.getAll();
+    ctx.body = boards.map(board => (board.toResponse()));
+  } catch (e) {
+    serverError(ctx);
+  }
 });
 
 router.get('/:id', ctx => {
@@ -24,7 +28,11 @@ router.get('/:id', ctx => {
     return;
   }
 
-  ctx.body = boardsService.getBoardById(id).toResponse();
+  try {
+    ctx.body = boardsService.getBoardById(id).toResponse();
+  } catch (e) {
+    serverError(ctx);
+  }
 });
 
 router.post('/', ctx => {
@@ -34,10 +42,13 @@ router.post('/', ctx => {
     return;
   }
 
-  board = boardsService.createBoard(board);
-
-  ctx.response.status = 201;
-  ctx.body = board.toResponse();
+  try {
+    board = boardsService.createBoard(board);
+    ctx.response.status = 201;
+    ctx.body = board.toResponse();
+  } catch (e) {
+    serverError(ctx);
+  }
 });
 
 router.put('/:id', ctx => {
@@ -55,10 +66,13 @@ router.put('/:id', ctx => {
     return;
   }
 
-  const board = boardsService.updateBoard(id, ctx.request.body);
-
-  ctx.response.status = 200;
-  ctx.body = board.toResponse();
+  try {
+    const board = boardsService.updateBoard(id, ctx.request.body);
+    ctx.response.status = 200;
+    ctx.body = board.toResponse();
+  } catch (e) {
+    serverError(ctx);
+  }
 });
 
 router.delete('/:id', ctx => {
@@ -72,9 +86,12 @@ router.delete('/:id', ctx => {
     return;
   }
 
-  boardsService.deleteBoard(id);
-
-  ctx.response.status = 204;
+  try {
+    boardsService.deleteBoard(id);
+    ctx.response.status = 204;
+  } catch (e) {
+    serverError(ctx);
+  }
 });
 
 module.exports = router;

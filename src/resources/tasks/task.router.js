@@ -2,6 +2,7 @@ const Router = require('@koa/router');
 const tasksService = require('./task.service');
 const {uuidValidator, entityExistValidator} = require('../../common/utils/common.validator');
 const {taskCreateValidator, taskUpdateValidator} = require('./utlis/task.validator');
+const serverError = require('../../common/utils/serverError');
 
 const router = new Router({
   prefix: '/boards/:boardId/tasks'
@@ -18,9 +19,12 @@ router.get('/', ctx => {
     return;
   }
 
-  const tasks = tasksService.getAll();
-
-  ctx.body = tasks.map(task => (task.toResponse()));
+  try {
+    const tasks = tasksService.getAll();
+    ctx.body = tasks.map(task => (task.toResponse()));
+  } catch (e) {
+    serverError(ctx);
+  }
 });
 
 router.get('/:id', ctx => {
@@ -34,7 +38,11 @@ router.get('/:id', ctx => {
     return;
   }
 
-  ctx.body = tasksService.getTaskById(id).toResponse();
+  try {
+    ctx.body = tasksService.getTaskById(id).toResponse();
+  } catch (e) {
+    serverError(ctx);
+  }
 });
 
 router.post('/', ctx => {
@@ -55,10 +63,13 @@ router.post('/', ctx => {
     return;
   }
 
-  task = tasksService.createTask(task);
-
-  ctx.response.status = 201;
-  ctx.body = task.toResponse();
+  try {
+    task = tasksService.createTask(task);
+    ctx.response.status = 201;
+    ctx.body = task.toResponse();
+  } catch (e) {
+    serverError(ctx);
+  }
 });
 
 router.put('/:id', ctx => {
@@ -78,10 +89,13 @@ router.put('/:id', ctx => {
     return;
   }
 
-  const task = tasksService.updateTask(id, ctx.request.body);
-
-  ctx.response.status = 200;
-  ctx.body = task.toResponse();
+  try {
+    const task = tasksService.updateTask(id, ctx.request.body);
+    ctx.response.status = 200;
+    ctx.body = task.toResponse();
+  } catch (e) {
+    serverError(ctx);
+  }
 });
 
 router.delete('/:id', ctx => {
@@ -95,9 +109,12 @@ router.delete('/:id', ctx => {
     return;
   }
 
-  tasksService.deleteTask(id);
-
-  ctx.response.status = 204;
+  try {
+    tasksService.deleteTask(id);
+    ctx.response.status = 204;
+  } catch (e) {
+    serverError(ctx);
+  }
 });
 
 module.exports = router;

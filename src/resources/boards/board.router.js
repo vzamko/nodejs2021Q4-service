@@ -1,5 +1,6 @@
 const Router = require('@koa/router');
 const boardsService = require('./board.service');
+const {uuidValidator, entityExistValidator} = require('../../common/utils/common.validator');
 
 const router = new Router({
   prefix: '/boards'
@@ -14,14 +15,15 @@ router.get('/', ctx => {
 router.get('/:id', ctx => {
   const {id} = ctx.params;
 
-  if (boardsService.getBoardById(id)) {
-    ctx.body = boardsService.getBoardById(id).toResponse();
-
+  if (uuidValidator(id, ctx)) {
     return;
   }
 
-  ctx.response.status = 404;
-  ctx.body = "Board not found.";
+  if (entityExistValidator(id, 'board', ctx)) {
+    return;
+  }
+
+  ctx.body = boardsService.getBoardById(id).toResponse();
 });
 
 router.post('/', ctx => {
@@ -35,6 +37,14 @@ router.post('/', ctx => {
 router.put('/:id', ctx => {
   const {id} = ctx.params;
 
+  if (uuidValidator(id, ctx)) {
+    return;
+  }
+
+  if (entityExistValidator(id, 'board', ctx)) {
+    return;
+  }
+
   const board = boardsService.updateBoard(id, ctx.request.body);
 
   ctx.response.status = 200;
@@ -43,6 +53,14 @@ router.put('/:id', ctx => {
 
 router.delete('/:id', ctx => {
   const {id} = ctx.params;
+
+  if (uuidValidator(id, ctx)) {
+    return;
+  }
+
+  if (entityExistValidator(id, 'board', ctx)) {
+    return;
+  }
 
   boardsService.deleteBoard(id);
 

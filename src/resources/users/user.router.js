@@ -1,5 +1,6 @@
 const Router = require('@koa/router');
 const usersService = require('./user.service');
+const {uuidValidator, entityExistValidator} = require('../../common/utils/common.validator');
 
 const router = new Router({
   prefix: '/users'
@@ -14,6 +15,14 @@ router.get('/', ctx => {
 router.get('/:id', ctx => {
   const {id} = ctx.params;
 
+  if (uuidValidator(id, ctx)) {
+    return;
+  }
+
+  if (entityExistValidator(id, 'user', ctx)) {
+    return;
+  }
+
   ctx.body = usersService.getUserById(id).toResponse();
 });
 
@@ -27,6 +36,14 @@ router.post('/', ctx => {
 router.put('/:id', ctx => {
   const {id} = ctx.params;
 
+  if (uuidValidator(id, ctx)) {
+    return;
+  }
+
+  if (entityExistValidator(id, 'user', ctx)) {
+    return;
+  }
+
   const user = usersService.updateUser(id, ctx.request.body);
 
   ctx.response.status = 200;
@@ -35,6 +52,14 @@ router.put('/:id', ctx => {
 
 router.delete('/:id', ctx => {
   const {id} = ctx.params;
+
+  if (uuidValidator(id, ctx)) {
+    return;
+  }
+
+  if (entityExistValidator(id, 'user', ctx)) {
+    return;
+  }
 
   usersService.deleteUser(id);
 

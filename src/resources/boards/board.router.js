@@ -1,23 +1,26 @@
 const Router = require('@koa/router');
-const usersService = require('./user.service');
+const boardsService = require('./board.service');
 const {
   uuidValidator,
   entityExistValidator,
 } = require('../../common/utils/common.validator');
 const {
-  userCreateValidator,
-  userUpdateValidator,
-} = require('./utils/user.validator');
+  boardCreateValidator,
+  boardUpdateValidator,
+} = require('./utils/board.validator');
 const serverError = require('../../common/utils/serverError');
 
 const router = new Router({
-  prefix: '/users',
+  prefix: '/boards',
 });
 
 router.get('/', (ctx) => {
-  const users = usersService.getAll();
-
-  ctx.body = users.map((user) => user.toResponse());
+  try {
+    const boards = boardsService.getAll();
+    ctx.body = boards.map((board) => board.toResponse());
+  } catch (e) {
+    serverError(ctx);
+  }
 });
 
 router.get('/:id', (ctx) => {
@@ -27,28 +30,28 @@ router.get('/:id', (ctx) => {
     return;
   }
 
-  if (entityExistValidator(id, 'user', ctx)) {
+  if (entityExistValidator(id, 'board', ctx)) {
     return;
   }
 
   try {
-    ctx.body = usersService.getUserById(id).toResponse();
+    ctx.body = boardsService.getBoardById(id).toResponse();
   } catch (e) {
     serverError(ctx);
   }
 });
 
 router.post('/', (ctx) => {
-  let user = ctx.request.body;
+  let board = ctx.request.body;
 
-  if (userCreateValidator(user, ctx)) {
+  if (boardCreateValidator(board, ctx)) {
     return;
   }
 
   try {
-    user = usersService.createUser(user);
+    board = boardsService.createBoard(board);
     ctx.response.status = 201;
-    ctx.body = user.toResponse();
+    ctx.body = board.toResponse();
   } catch (e) {
     serverError(ctx);
   }
@@ -61,18 +64,18 @@ router.put('/:id', (ctx) => {
     return;
   }
 
-  if (entityExistValidator(id, 'user', ctx)) {
+  if (entityExistValidator(id, 'board', ctx)) {
     return;
   }
 
-  if (userUpdateValidator(ctx.request.body, ctx)) {
+  if (boardUpdateValidator(ctx.request.body, ctx)) {
     return;
   }
 
   try {
-    const user = usersService.updateUser(id, ctx.request.body);
+    const board = boardsService.updateBoard(id, ctx.request.body);
     ctx.response.status = 200;
-    ctx.body = user.toResponse();
+    ctx.body = board.toResponse();
   } catch (e) {
     serverError(ctx);
   }
@@ -85,12 +88,12 @@ router.delete('/:id', (ctx) => {
     return;
   }
 
-  if (entityExistValidator(id, 'user', ctx)) {
+  if (entityExistValidator(id, 'board', ctx)) {
     return;
   }
 
   try {
-    usersService.deleteUser(id);
+    boardsService.deleteBoard(id);
     ctx.response.status = 204;
   } catch (e) {
     serverError(ctx);

@@ -44,10 +44,12 @@
     ]
   },
   "dependencies": {
+    "@koa/router": "^10.1.1",
     "cross-env": "7.0.3",
     "dotenv": "10.0.0",
-    "express": "4.17.1",
-    "swagger-ui-express": "4.1.6",
+    "koa": "^2.13.4",
+    "koa-bodyparser": "^4.3.0",
+    "koa2-swagger-ui": "^5.3.0",
     "uuid": "8.3.2",
     "yamljs": "0.3.0"
   },
